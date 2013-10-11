@@ -17,12 +17,14 @@
 <body>
     <h2 id='title'> Echo Nest / Spotify Demonstration </h2>
     <div id="info"> </div>
+    <div id="biography"> </div>
     <button id="new" onclick="makePlaylistFromNowPlaying()"> Generate Playlist </button>
     <h2 id='playlist-name'> Playlist Name</h2>
     <div id='all-results'>
         <ul id="results"> </ul>
     </div>
     <button id='save-button'> Save playlist</button>
+    
 </body>
 
 <script type="text/javascript">
@@ -36,7 +38,7 @@ function makePlaylistFromNowPlaying() {
     if (track == null) {
         info("Start playing something and I'll make a playlist of good songs based on that song");
     } else {
-        fetchPlaylist(models.player.track.artists[0], 25);
+        fetchPlaylist(models.player.track.artists[0], 100);
     }
 }
 
@@ -48,6 +50,7 @@ function createPlayButton(song) {
     button.click(function() {
         var uri = getSpotifyID(song);
         models.player.play(uri);
+        fetchMetaData(song.artist_name);
     });
     span.append(button);
     span.append(song_name);
@@ -59,10 +62,38 @@ function getSpotifyID(song) {
     return uri.replace('spotify-WW', 'spotify');
 }
 
+function fetchMetaData(artist) {
+
+    artist = artist.replace(" ","+");
+    console.log("fetch metadata for " + artist);
+
+    //com/api/v4/artist/biographies?api_key=PZ4LKPTF5EEUFUVKM&callback=?&name=robert+wilkins&format=jsonP&results=1&start=0&license=cc-by-sa
+    var url="http://developer.echonest.com/api/v4/artist/biographies?api_key=PZ4LKPTF5EEUFUVKM&callback=?";
+
+    $.getJSON( url,{'name':artist,
+                    'format':'jsonp',
+                    'results':10,
+                    'start':0,
+                    'license':'cc-by-sa'},
+        function(data){
+            //console.log(data.response.biographies[0].text);
+            console.log(data);
+            //$("#biography").text(data.response.biographies[0].text);
+        }
+    )
+
+    $.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&callback=?", {page:"Football", prop:"text"}, 
+        function(data) {
+            console.log(data.parse.text["*"]);
+            $("#biography").append(data.parse.text["*"]);
+        }
+    );
+}
+
 function fetchPlaylist(artist, size) {
     info('Getting playlist for ' + artist.name);
     var artist_id = artist.uri.replace('spotify', 'spotify-WW');
-    var url = 'http://developer.echonest.com/api/v4/playlist/basic?api_key=N6E4NIOVYMTHNDM8J&callback=?';
+    var url = 'http://developer.echonest.com/api/v4/playlist/basic?api_key=PZ4LKPTF5EEUFUVKM&callback=?';
 
     $.getJSON(url, { 'artist_id': artist_id, 'format':'jsonp', limit: true,
             'results': size, 'type':'artist-radio', bucket : ['id:spotify-WW', 'tracks']}, function(data) {

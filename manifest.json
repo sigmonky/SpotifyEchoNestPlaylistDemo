@@ -1,5 +1,6 @@
 {
 	"BundleType": "Application",
+	"BundleIdentifier": "echonest",
 	"AppIcon": {
 		"18x18": "icon.png"
 	},
