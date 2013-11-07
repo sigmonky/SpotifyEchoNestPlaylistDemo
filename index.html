@@ -9,21 +9,29 @@
 <head>
     <meta charset="utf-8">
     <title>Playlister</title>
-    <link rel="stylesheet" href="sp://import/css/adam.css">
-    <link rel="stylesheet" href="styles.css">
+    <!--<link rel="stylesheet" href="sp://import/css/adam.css">-->
+    <!--<link rel="stylesheet" href="styles.css">-->
+    <link href="bootstrap.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery.min.js"></script>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
 </head>
 
 <body>
-    <h2 id='title'> Echo Nest / Spotify Demonstration </h2>
-    <div id="info"> </div>
-    <div id="biography"> </div>
-    <button id="new" onclick="makePlaylistFromNowPlaying()"> Generate Playlist </button>
-    <h2 id='playlist-name'> Playlist Name</h2>
-    <div id='all-results'>
-        <ul id="results"> </ul>
+    <div class="container">
+        <h2 id='title'> Echo Nest / Spotify Demonstration </h2>
+        <div id="info"> </div>
+        <div id="biography"> </div>
+        <button id="new" onclick="makePlaylistFromNowPlaying()"> Generate Playlist </button>
+        <h2 id='playlist-name'> Playlist Name</h2>
+        <div id='all-results'>
+            <ul id="results"> </ul>
+        </div>
+        <button id='save-button'> Save playlist</button>
     </div>
-    <button id='save-button'> Save playlist</button>
     
 </body>
 
@@ -70,7 +78,7 @@ function fetchMetaData(artist) {
     //com/api/v4/artist/biographies?api_key=PZ4LKPTF5EEUFUVKM&callback=?&name=robert+wilkins&format=jsonP&results=1&start=0&license=cc-by-sa
     var url="http://developer.echonest.com/api/v4/artist/biographies?api_key=PZ4LKPTF5EEUFUVKM&callback=?";
 
-    $.getJSON( url,{'name':artist,
+    /*$.getJSON( url,{'name':artist,
                     'format':'jsonp',
                     'results':10,
                     'start':0,
@@ -87,7 +95,7 @@ function fetchMetaData(artist) {
             console.log(data.parse.text["*"]);
             $("#biography").append(data.parse.text["*"]);
         }
-    );
+    );*/
 }
 
 function fetchPlaylist(artist, size) {
